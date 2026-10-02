@@ -1,0 +1,29 @@
+# قطرة حياة — نشر مجاني على Render (يعمل مع ملف qatrat-hayah.zip الموجود في نفس المستودع)
+services:
+  - type: web
+    name: qatrat-hayat-nk
+    runtime: python
+    plan: free
+    region: frankfurt
+    buildCommand: python -m zipfile -e qatrat-hayah.zip . && pip install -r qatrat-hayah/requirements.txt
+    startCommand: cd qatrat-hayah && gunicorn -w 2 -b 0.0.0.0:$PORT --timeout 60 wsgi:app
+    healthCheckPath: /ping
+    envVars:
+      - key: QH_ENV
+        value: production
+      - key: QH_SECRET_KEY
+        generateValue: true
+      - key: QH_JWT_SECRET
+        generateValue: true
+      - key: QH_SETUP_TOKEN
+        generateValue: true
+      - key: QH_TASKS_TOKEN
+        generateValue: true
+      - key: QH_TIMEZONE
+        value: Africa/Khartoum
+      - key: QH_SEED_DEMO
+        value: "0"
+      - key: PYTHON_VERSION
+        value: "3.12.4"
+      - key: QH_DATABASE_URL
+        sync: false
